@@ -1,6 +1,6 @@
 from aiogram import Router
 from .start import router as router_start
-from .token import router as router_token
+from .bot_token import router as router_token
 
 router = Router()
 
