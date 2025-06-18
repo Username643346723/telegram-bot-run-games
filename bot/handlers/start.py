@@ -1,10 +1,10 @@
-from aiogram import Router, F
+from aiogram import Router
 from aiogram import types
 from aiogram.filters.command import CommandStart
 
 from bot.crud.user import create_or_update_user
-from bot.utils import setup_logger
 from bot.models import db_helper
+from bot.utils import setup_logger
 
 logger = setup_logger(__name__)
 router = Router()
