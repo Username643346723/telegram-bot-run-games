@@ -19,7 +19,7 @@ class BotToken(Base):
 
     # Основные поля
     id: Mapped[int] = mapped_column(
-        BigInteger,
+        Integer,
         primary_key=True,
         autoincrement=True,
         comment="Уникальный идентификатор записи"
