@@ -3,7 +3,7 @@ import sys
 import traceback
 
 from bot.client import bot, dp
-from bot.handlers.base import router as router_main
+from bot.handlers import router as router_main
 from bot.utils import setup_logger
 
 logger = setup_logger(__name__)
