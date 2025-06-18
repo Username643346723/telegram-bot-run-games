@@ -1,6 +1,13 @@
-from sqlalchemy import BigInteger, String, Boolean
-from sqlalchemy.orm import Mapped, mapped_column
+from typing import TYPE_CHECKING
+
+from sqlalchemy import BigInteger, String
+from sqlalchemy import Boolean
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from .base import Base
+
+if TYPE_CHECKING:
+    from .bot_token import BotToken
 
 
 class User(Base):
@@ -35,6 +42,12 @@ class User(Base):
         default=False,
         server_default='false',
         comment="Заблокировал ли пользователь бота"
+    )
+
+    # связь с токенами
+    tokens: Mapped[list["BotToken"]] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan"
     )
 
     def __repr__(self) -> str:

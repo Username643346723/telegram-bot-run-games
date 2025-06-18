@@ -1,7 +1,14 @@
 from datetime import datetime
-from sqlalchemy import BigInteger, String, Boolean, Integer, DateTime, func
-from sqlalchemy.orm import Mapped, mapped_column
+from typing import TYPE_CHECKING
+
+from sqlalchemy import BigInteger, String, Boolean, Integer, DateTime, func, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from .base import Base
+from .users import User
+
+if TYPE_CHECKING:
+    from .users import User
 
 
 class BotToken(Base):
@@ -17,6 +24,13 @@ class BotToken(Base):
         autoincrement=True,
         comment="Уникальный идентификатор записи"
     )
+
+    bot_id: Mapped[int | None] = mapped_column(
+        BigInteger,
+        nullable=True,
+        comment="ID бота, полученный из getMe"
+    )
+
     token: Mapped[str] = mapped_column(
         String(100),
         nullable=False,
@@ -38,11 +52,6 @@ class BotToken(Base):
         String(32),
         nullable=True,
         comment="Юзернейм бота (без @)"
-    )
-    user_id: Mapped[int] = mapped_column(
-        BigInteger,
-        nullable=False,
-        comment="ID пользователя, который добавил токен"
     )
 
     # Мета-поля
@@ -80,6 +89,17 @@ class BotToken(Base):
         String(255),
         nullable=True,
         comment="Причина бана токена"
+    )
+
+    user_id: Mapped[int] = mapped_column(
+        BigInteger,
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        comment="ID пользователя, который добавил токен"
+    )
+
+    user: Mapped["User"] = relationship(
+        back_populates="tokens"
     )
 
     def __repr__(self) -> str:
