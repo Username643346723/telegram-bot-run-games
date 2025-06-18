@@ -1,10 +1,14 @@
 from aiogram import Router, F
 from aiogram import types
 from aiogram.filters.command import CommandStart
+
+from bot.crud.user import create_or_update_user
 from bot.utils import setup_logger
+from bot.models import db_helper
 
 logger = setup_logger(__name__)
 router = Router()
+
 
 @router.message(CommandStart())
 async def cmd_start(message: types.Message):
@@ -15,6 +19,16 @@ async def cmd_start(message: types.Message):
         message.from_user.username or "no_username",
         message.from_user.language_code or "unknown"
     )
+
+    async with db_helper.session_factory() as session:
+        await create_or_update_user(
+            session,
+            user_id=message.from_user.id,
+            full_name=message.from_user.full_name,
+            username=message.from_user.username,
+            language_code=message.from_user.language_code,
+        )
+
     await message.answer(
         "Привет! Отправь мне токен бота для проверки.\n"
     )
