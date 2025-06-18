@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "telegram-bot-run-games"
+version = "0.1.0"
+description = "telegram bot for run other telegram bot games"
+authors = ["Ruslan <fludistvud@ya.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+aiogram = "3.20.0"
+pydantic = "2.11.7"
+pydantic-settings = "2.9.1"
+sqlalchemy = "^2.0.41"
+alembic = "^1.16.1"
+aiosqlite = "^0.21.0"
+black = "^25.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
