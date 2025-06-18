@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "telegram bot for run other telegram bot games"
 authors = ["Ruslan <fludistvud@ya.ru>"]
 readme = "README.md"
+packages = [{ include = "bot" }]
 
 [tool.poetry.dependencies]
 python = "^3.12"
