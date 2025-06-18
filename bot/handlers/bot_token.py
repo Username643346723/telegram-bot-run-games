@@ -1,7 +1,12 @@
 import aiohttp
 from aiogram import Router, F
 from aiogram import types
+
+from bot.models import db_helper
 from bot.utils import setup_logger
+
+from bot.crud.bot_token import *
+from bot.crud.user import get_user_by_telegram_id, create_or_update_user
 
 logger = setup_logger(__name__)
 router = Router()
@@ -9,37 +14,62 @@ router = Router()
 
 @router.message(F.text.regexp(r'^\d+:[A-Za-z\d_-]+$'))
 async def process_token(message: types.Message):
-    token = message.text.strip(' ').strip('\n')
+    token = message.text.strip()
 
-    # Проверяем формат токена
-    if not token.startswith("") or ":" not in token:
-        await message.answer("Неверный формат токена. Пожалуйста, попробуй еще раз.")
-        return
+    if ":" not in token:
+        logger.info(f"Invalid token format from user {message.from_user.id}: {token}")
+        return await message.answer("❌ Неверный формат токена. Попробуй снова.")
 
     is_valid, bot_info = await validate_token(token)
-
     if not is_valid:
-        await message.answer("❌ Токен невалиден. Проверь и попробуй снова.")
-        return
+        logger.info(f"Token validation failed for user {message.from_user.id}: {token}")
+        return await message.answer("❌ Токен невалиден. Проверь и попробуй снова.")
 
-    # Сохраняем в базу
-    # await save_bot_token_if_valid(token, message.from_user.id, bot_info)
+    logger.info(f"Valid token received from user {message.from_user.id}: {bot_info}")
+
+    async with db_helper.session_factory() as session:
+        existing_token = await get_token_by_string(session, token=token)
+        if existing_token:
+            logger.info(f"Duplicate token from user {message.from_user.id}: {token}")
+            return await message.answer("⚠️ Такой токен уже существует в системе.")
+
+        user = await get_user_by_telegram_id(session, telegram_id=message.from_user.id)
+        if not user:
+            user = await create_or_update_user(
+                session=session,
+                user_id=message.from_user.id,
+                full_name=message.from_user.full_name,
+                username=message.from_user.username,
+                language_code=message.from_user.language_code,
+            )
+            logger.info(f"Created new user record for {message.from_user.id}")
+
+        await create_bot_token(
+            session=session,
+            token=token,
+            user_id=user.id,
+            bot_name=bot_info.get("first_name", ""),
+            bot_username=bot_info.get("username", "")
+        )
+        logger.info(f"Token saved for bot @{bot_info.get('username')} by user {message.from_user.id}")
 
     await message.answer(
-        f"✅ Токен принят. Бот: {bot_info.get('username')}.\n"
+        f"✅ Токен принят. Бот: @{bot_info.get('username', 'неизвестно')}.\n"
         "Теперь он будет использоваться в системе."
     )
 
 
 async def validate_token(token: str) -> tuple[bool, dict]:
-    async with aiohttp.ClientSession() as session:
-        url = f"https://api.telegram.org/bot{token}/getMe"
-        try:
+    url = f"https://api.telegram.org/bot{token}/getMe"
+    try:
+        async with aiohttp.ClientSession() as session:
             async with session.get(url, timeout=5) as response:
                 if response.status == 200:
                     data = await response.json()
-                    if data.get("ok"):
-                        return True, data.get("result")
-        except Exception as e:
-            logger.warning(f"Token validation failed: {e}")
+                    if data.get("ok") and data.get("result"):
+                        return True, data["result"]
+                else:
+                    logger.warning(f"Telegram API responded with status {response.status} for token: {token}")
+    except Exception as e:
+        logger.warning(f"Exception during token validation: {e}")
     return False, {}
