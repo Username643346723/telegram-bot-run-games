@@ -9,6 +9,12 @@ async def get_user_by_id(session: AsyncSession, user_id: int) -> User | None:
     return result.scalar_one_or_none()
 
 
+async def get_user_by_telegram_id(session: AsyncSession, telegram_id: int) -> User | None:
+    stmt = select(User).where(User.id == telegram_id)
+    result = await session.execute(stmt)
+    return result.scalar_one_or_none()
+
+
 async def create_or_update_user(session: AsyncSession, *, user_id: int, full_name: str | None = None,
                                 username: str | None = None, language_code: str | None = None) -> User:
     user = await get_user_by_id(session, user_id)
