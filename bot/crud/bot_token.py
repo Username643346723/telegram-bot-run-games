@@ -1,11 +1,49 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, update, delete
+from sqlalchemy import select, update, delete, func
 from bot.models.bot_token import BotToken
 from sqlalchemy.exc import IntegrityError
 from typing import Sequence
 from bot.utils.logger import setup_logger
 
 logger = setup_logger(__name__)
+
+
+async def get_tokens_to_check(
+        session: AsyncSession,
+        check_type: str
+) -> Sequence[BotToken]:
+    """Получить токены для проверки по типу"""
+    stmt = select(BotToken)
+
+    if check_type == "inactive":
+        stmt = stmt.where(BotToken.is_active == False)
+    elif check_type == "recent":
+        stmt = stmt.order_by(BotToken.created_at.desc()).limit(10)
+
+    result = await session.execute(stmt)
+    return result.scalars().all()
+
+
+async def update_token_after_check(
+        session: AsyncSession,
+        token_id: int,
+        is_active: bool,
+        bot_id: int | None = None,
+        bot_name: str | None = None,
+        bot_username: str | None = None
+) -> None:
+    """Обновить токен после проверки"""
+    await session.execute(
+        update(BotToken)
+        .where(BotToken.id == token_id)
+        .values(
+            is_active=is_active,
+            bot_id=bot_id,
+            bot_name=bot_name,
+            bot_username=bot_username,
+            last_check_at=func.now()
+        )
+    )
 
 
 # Получение токена по строке
