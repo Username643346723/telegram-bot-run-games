@@ -1,6 +1,46 @@
+from typing import Sequence
+
+from sqlalchemy import select, func, String
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+
 from bot.models.users import User
+from bot.models.bot_token import BotToken
+
+
+
+async def get_recent_users(session: AsyncSession, limit: int = 10) -> Sequence[User]:
+    """Получить последних пользователей с количеством их токенов"""
+    stmt = (
+        select(User)
+        .order_by(User.created_at.desc())
+        .limit(limit)
+    )
+    result = await session.execute(stmt)
+    return result.scalars().all()
+
+
+async def get_user_with_tokens_count(session: AsyncSession, user_id: int) -> tuple[User, int]:
+    """Получить пользователя с количеством его токенов"""
+    user = await get_user_by_id(session, user_id)
+    if not user:
+        return None, 0
+
+    tokens_count = await session.scalar(
+        select(func.count(BotToken.id))
+        .where(BotToken.user_id == user_id)
+    )
+    return user, tokens_count
+
+
+async def search_users(session: AsyncSession, search_query: str) -> Sequence[User]:
+    """Поиск пользователей по ID или username"""
+    stmt = select(User).where(
+        (User.username.ilike(f"%{search_query}%")) |
+        (User.id.cast(String).ilike(f"%{search_query}%")) |
+        (User.full_name.ilike(f"%{search_query}%"))
+    ).order_by(User.created_at.desc()).limit(20)
+    result = await session.execute(stmt)
+    return result.scalars().all()
 
 
 async def get_user_by_id(session: AsyncSession, user_id: int) -> User | None:
