@@ -114,3 +114,5 @@ output/
 *.db
 
 tests/*
+
+resources/*
