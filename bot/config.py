@@ -17,6 +17,7 @@ class Paths:
 
 class Telegram(BaseModel):
     token: str = Field(..., description="Token telegram bot")
+    admins_id: list[int] = Field(..., description="Admins ID")
 
 
 class DatabaseConfig(BaseModel):
