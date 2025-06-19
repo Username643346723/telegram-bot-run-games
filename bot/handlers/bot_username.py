@@ -60,12 +60,12 @@ async def handle_generate_username(callback: CallbackQuery):
             "📌 <b>Как создать бота и получить токен:</b>\n"
             "1. Найти в Telegram <a href='https://t.me/BotFather'>@BotFather</a>\n"
             "2. Отправить команду <code>/newbot</code>\n"
-            "3. Ввести имя бота (любое)\n"
-            "4. Ввести username: <code>@{username}</code>\n"
+            f"3. Ввести имя бота ({username})\n"
+            f"4. Ввести username: <code>@{username}</code>\n"
             "5. Получить токен доступа\n\n"
             "🎥 <a href='https://www.youtube.com/shorts/miiZ_wSaA0g'>Видео-инструкция</a>\n\n"
             "🔑 <b>После создания отправь мне токен бота:</b>\n"
-            "<i>Формат:</i> <code>1234567890:ABCdefGHIjklMnOpQRStuVWXYz</code>",
+            "<i>Формат(Пример):</i> <code>1234567890:ABCdefGHIjklMnOpQRStuVWXYz</code>",
             parse_mode="HTML",
             disable_web_page_preview=True
         )
