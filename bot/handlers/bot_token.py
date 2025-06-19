@@ -1,12 +1,10 @@
-import aiohttp
 from aiogram import Router, F
 from aiogram import types
 
-from bot.models import db_helper
-from bot.utils import setup_logger
-
 from bot.crud.bot_token import *
 from bot.crud.user import get_user_by_telegram_id, create_or_update_user
+from bot.models import db_helper
+from bot.utils.token import validate_token
 
 logger = setup_logger(__name__)
 router = Router()
@@ -57,19 +55,3 @@ async def process_token(message: types.Message):
         f"✅ Токен принят. Бот: @{bot_info.get('username', 'неизвестно')}.\n"
         "Теперь он будет использоваться в системе."
     )
-
-
-async def validate_token(token: str) -> tuple[bool, dict]:
-    url = f"https://api.telegram.org/bot{token}/getMe"
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, timeout=5) as response:
-                if response.status == 200:
-                    data = await response.json()
-                    if data.get("ok") and data.get("result"):
-                        return True, data["result"]
-                else:
-                    logger.warning(f"Telegram API responded with status {response.status} for token: {token}")
-    except Exception as e:
-        logger.warning(f"Exception during token validation: {e}")
-    return False, {}
