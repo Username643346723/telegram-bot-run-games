@@ -1,9 +1,15 @@
 from typing import Literal
+
+from pydantic import BaseModel, Field
 from pydantic import PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import BaseModel, Field
 
 LOG_DEFAULT_FORMAT = "[%(asctime)s.%(msecs)03d] %(module)10s:%(lineno)-3d %(levelname)-7s - %(message)s"
+
+
+class Telegram(BaseModel):
+    token: str = Field(..., description="Token telegram bot")
+    admins_id: list[int] = Field(..., description="Admins ID")
 
 
 class RunConfig(BaseModel):
@@ -60,6 +66,7 @@ class Settings(BaseSettings):
     gunicorn: GunicornConfig = GunicornConfig()
     db: DatabaseConfig
     logging: LoggingConfig = LoggingConfig()
+    tg: Telegram
 
     WEBHOOK_SECRET: str
     DOMAIN: str = "http://127.0.0.1:8000"
