@@ -5,7 +5,7 @@ from webhook_app.services.webhook_handler import handle_telegram_update
 router = APIRouter()
 
 
-@router.post("/webhook/{bot_id}")
+@router.post("/webhook/{webhook_id}")
 async def telegram_webhook(
         bot_id: str,
         request: Request,
