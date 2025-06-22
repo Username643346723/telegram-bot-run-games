@@ -10,6 +10,7 @@ LOG_DEFAULT_FORMAT = "[%(asctime)s.%(msecs)03d] %(module)10s:%(lineno)-3d %(leve
 class Telegram(BaseModel):
     token: str = Field(..., description="Token telegram bot")
     admins_id: list[int] = Field(..., description="Admins ID")
+    webhook_id_base_bot: str = Field(...,)
 
 
 class RunConfig(BaseModel):
@@ -69,7 +70,7 @@ class Settings(BaseSettings):
     tg: Telegram
 
     WEBHOOK_SECRET: str
-    DOMAIN: str = "http://127.0.0.1:8000"
+    WEBHOOK_BASE_URL: str = "http://127.0.0.1:8000"
 
 
 # Экземпляр настроек
