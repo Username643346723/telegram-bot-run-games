@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Request, HTTPException
+from aiogram.types import Update
+from fastapi import APIRouter, Request
 
-from webhook_app.core.config import settings
-from webhook_app.services.webhook_handler import handle_telegram_update
+from bot.client import dp
 from webhook_app.utils.logger import setup_logger
 
 logger = setup_logger(__name__)
@@ -19,6 +19,10 @@ async def telegram_webhook(
     # if secret != settings.WEBHOOK_SECRET:
     #     raise HTTPException(status_code=403, detail="Forbidden")
 
-    data = await request.json()
-    await handle_telegram_update(bot_id=webhook_id, update_data=data)
+    json_data = await request.json()
+    update = Update(**json_data)
+
+    await dp.process_update(update)
+
+    # await handle_telegram_update(bot_id=webhook_id, update_data=data)
     return {"ok": True}

@@ -1,14 +1,16 @@
 import uvicorn
 
 from webhook_app.api import main_router
-from webhook_app.core.client import app, bot
+from webhook_app.core.client import app, bot, dp
 from webhook_app.core.config import settings
+from bot.handlers import router
 
 from webhook_app.utils.logger import setup_logger
 
 logger = setup_logger(__name__)
 
 app.include_router(main_router, prefix="/api/v1")
+dp.include_router(router)
 
 
 @app.on_event("startup")
