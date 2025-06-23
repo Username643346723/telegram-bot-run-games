@@ -12,13 +12,12 @@ router = APIRouter()
 async def telegram_webhook(
         webhook_id: str,
         request: Request,
-        secret: str
 ):
     logger.info(f"webhook_id: {webhook_id}, request: {str(request)}")
     body = await request.body()
     logger.info(f"Raw body: {body}")
-    if secret != settings.WEBHOOK_SECRET:
-        raise HTTPException(status_code=403, detail="Forbidden")
+    # if secret != settings.WEBHOOK_SECRET:
+    #     raise HTTPException(status_code=403, detail="Forbidden")
 
     data = await request.json()
     await handle_telegram_update(bot_id=webhook_id, update_data=data)
