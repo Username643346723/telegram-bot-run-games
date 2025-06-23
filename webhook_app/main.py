@@ -16,7 +16,7 @@ async def startup():
     if settings.ENV == "development":
         url = f"{settings.WEBHOOK_BASE_URL}/webhook/{settings.tg.webhook_id_base_bot}"
         logger.info(f"Set webhook url: {url}")
-        await bot.set_webhook(url=f"{settings.WEBHOOK_BASE_URL}/webhook/{settings.tg.webhook_id_base_bot}")
+        await bot.set_webhook(url=f"{settings.WEBHOOK_BASE_URL}/api/v1/webhook/{settings.tg.webhook_id_base_bot}")
 
 
 if __name__ == '__main__':
