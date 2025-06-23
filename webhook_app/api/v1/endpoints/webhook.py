@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Request, HTTPException
+
 from webhook_app.core.config import settings
 from webhook_app.services.webhook_handler import handle_telegram_update
+from webhook_app.utils.logger import setup_logger
 
-
+logger = setup_logger(__name__)
 router = APIRouter()
 
 
@@ -12,6 +14,7 @@ async def telegram_webhook(
         request: Request,
         secret: str
 ):
+    logger.info(f"webhook_id: {webhook_id}, request: {str(request)}")
     if secret != settings.WEBHOOK_SECRET:
         raise HTTPException(status_code=403, detail="Forbidden")
 
