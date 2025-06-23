@@ -9,6 +9,12 @@ LOG_DEFAULT_FORMAT = "[%(asctime)s.%(msecs)03d] %(module)10s:%(lineno)-3d %(leve
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+class Paths:
+    temp: Path = BASE_DIR / 'temp'
+    sessions: Path = BASE_DIR / 'sessions'
+    logs: Path = BASE_DIR / 'logs'
+
+
 class Telegram(BaseModel):
     token: str = Field(..., description="Token telegram bot")
     admins_id: list[int] = Field(..., description="Admins ID")
@@ -21,8 +27,8 @@ class RunConfig(BaseModel):
 
 
 class GunicornConfig(BaseModel):
-    host: str = "0.0.0.0"
-    port: int = 8000
+    host: str = "127.0.0.1"
+    port: int = 8080
     workers: int = 1
     timeout: int = 900
 
@@ -66,10 +72,11 @@ class Settings(BaseSettings):
     APP_NAME: str = Field(env="APP_NAME", default="FastAPI Application")
     DEBUG: bool = Field(env="DEBUG", default=False)
     run: RunConfig = RunConfig()
+    paths: Paths = Paths()
     gunicorn: GunicornConfig = GunicornConfig()
     db: DatabaseConfig
     logging: LoggingConfig = LoggingConfig()
-    # tg: Telegram
+    tg: Telegram
 
     WEBHOOK_SECRET: str
     WEBHOOK_BASE_URL: str = "http://127.0.0.1:8000"
