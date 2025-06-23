@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Literal
 
 from pydantic import BaseModel, Field
@@ -5,6 +6,7 @@ from pydantic import PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 LOG_DEFAULT_FORMAT = "[%(asctime)s.%(msecs)03d] %(module)10s:%(lineno)-3d %(levelname)-7s - %(message)s"
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 class Telegram(BaseModel):
@@ -67,7 +69,7 @@ class Settings(BaseSettings):
     gunicorn: GunicornConfig = GunicornConfig()
     db: DatabaseConfig
     logging: LoggingConfig = LoggingConfig()
-    tg: Telegram
+    # tg: Telegram
 
     WEBHOOK_SECRET: str
     WEBHOOK_BASE_URL: str = "http://127.0.0.1:8000"
