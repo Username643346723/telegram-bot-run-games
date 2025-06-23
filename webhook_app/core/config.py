@@ -10,7 +10,7 @@ LOG_DEFAULT_FORMAT = "[%(asctime)s.%(msecs)03d] %(module)10s:%(lineno)-3d %(leve
 class Telegram(BaseModel):
     token: str = Field(..., description="Token telegram bot")
     admins_id: list[int] = Field(..., description="Admins ID")
-    webhook_id_base_bot: str = Field(...,)
+    webhook_id_base_bot: str = Field(..., )
 
 
 class RunConfig(BaseModel):
@@ -55,7 +55,7 @@ class DatabaseConfig(BaseModel):
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=(".env.template", ".env"),
+        env_file=(".env.webhook_app",),
         case_sensitive=False,
         env_nested_delimiter="__",
         env_prefix="APP_CONFIG__",
