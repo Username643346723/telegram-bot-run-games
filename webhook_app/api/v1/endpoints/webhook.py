@@ -15,6 +15,8 @@ async def telegram_webhook(
         secret: str
 ):
     logger.info(f"webhook_id: {webhook_id}, request: {str(request)}")
+    body = await request.body()
+    logger.info(f"Raw body: {body}")
     if secret != settings.WEBHOOK_SECRET:
         raise HTTPException(status_code=403, detail="Forbidden")
 
