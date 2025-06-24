@@ -22,4 +22,7 @@ def setup_logger(name: str = "") -> logging.Logger:
         handler.setFormatter(formatter)
         logger.addHandler(handler)
 
+    logger.info(f"paths logs: {settings.paths.logs}")
+    logger.info(f"LOG_FILE_PATH: {LOG_FILE_PATH}")
+
     return logger
