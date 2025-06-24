@@ -30,9 +30,9 @@ async def get_system_stats(session: AsyncSession) -> dict:
     ) or 0
 
     # Новые пользователи за последнюю неделю
-    last_week = datetime.now(UTC) - timedelta(days=7)
+    week_ago = (datetime.now(UTC) - timedelta(days=7)).astimezone(UTC).replace(tzinfo=None)
     stats['last_week_users'] = await session.scalar(
-        select(func.count(User.id)).where(User.created_at >= last_week)
+        select(func.count(User.id)).where(User.created_at >= week_ago)
     ) or 0
 
     return stats
