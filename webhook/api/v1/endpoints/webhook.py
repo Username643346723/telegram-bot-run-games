@@ -1,7 +1,7 @@
 from aiogram.types import Update
 from fastapi import APIRouter, Request
 
-from core.bot import dp
+from core.bot import dp, bot
 from libs.logging.logger import setup_logger
 
 logger = setup_logger(__name__)
@@ -22,7 +22,7 @@ async def telegram_webhook(
     json_data = await request.json()
     update = Update(**json_data)
 
-    await dp.process_update(update)
+    await dp.feed_webhook_update(bot, update)
 
     # await handle_telegram_update(bot_id=webhook_id, update_data=data)
     return {"ok": True}
