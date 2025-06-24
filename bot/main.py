@@ -15,6 +15,7 @@ async def main():
         f"Environment: {settings.ENV}\n"
         f"Bot ID: {bot.id}"
     )
+    await bot.delete_webhook(drop_pending_updates=True)
 
     try:
         await dp.start_polling(bot)
