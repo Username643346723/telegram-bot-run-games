@@ -17,7 +17,7 @@ class Paths:
 
 class Telegram(BaseModel):
     token: str = Field(..., description="Token telegram bot")
-    admin_ids: list[int] = Field(..., description="Admins ID")
+    admins_id: list[int] = Field(..., description="Admins ID")
     webhook_id_base_bot: str = Field(..., )
 
 

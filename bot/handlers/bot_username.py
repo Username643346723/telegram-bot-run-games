@@ -47,8 +47,8 @@ async def handle_generate_username(callback: CallbackQuery):
         )
 
         # Уведомление администраторам
-        if settings.tg.admin_ids:
-            for admin_id in settings.tg.admin_ids:
+        if settings.tg.admins_id:
+            for admin_id in settings.tg.admins_id:
                 await callback.bot.send_message(
                     admin_id,
                     f"⚠️ Закончились имена для ботов! Пользователь {callback.from_user.id} запросил имя."
