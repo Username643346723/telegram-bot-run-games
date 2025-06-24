@@ -7,7 +7,6 @@ from bot.models.users import User
 from bot.models.bot_token import BotToken
 
 
-
 async def get_recent_users(session: AsyncSession, limit: int = 10) -> Sequence[User]:
     """Получить последних пользователей с количеством их токенов"""
     stmt = (

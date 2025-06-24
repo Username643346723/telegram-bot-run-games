@@ -1,6 +1,7 @@
 __all__ = (
     "User",
     "BotToken",
+    "Game",
 )
 
 
@@ -10,4 +11,8 @@ from .users import (
 
 from .bot_token import (
     BotToken,
+)
+
+from .games import (
+    Game,
 )
