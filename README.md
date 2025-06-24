@@ -67,3 +67,6 @@ cd telegram-bot-token-manager
     ├── unit/              # Юнит-тесты
     ├── integration/       # Интеграционные тесты
     └── fixtures/          # Тестовые данные
+
+
+sudo lsof -i :8080
