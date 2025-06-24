@@ -4,7 +4,8 @@ from aiogram import types
 from bot.crud.bot_token import *
 from bot.crud.user import get_user_by_telegram_id, create_or_update_user
 from bot.models import db_helper
-from bot.utils.token import validate_token
+from utils.logger import setup_logger
+from utils.token import validate_token
 
 logger = setup_logger(__name__)
 router = Router()

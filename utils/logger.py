@@ -1,8 +1,7 @@
 import logging
 import sys
-from pathlib import Path
 
-from bot.config import settings
+from core.config import settings
 
 LOG_FILE_PATH = settings.paths.logs / "log.txt"
 LOG_FILE_PATH.parent.mkdir(parents=True, exist_ok=True)

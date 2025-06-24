@@ -1,11 +1,11 @@
 import uvicorn
 
 from webhook_app.api import main_router
-from webhook_app.core.client import app, bot, dp
-from webhook_app.core.config import settings
+from core.client import app, bot, dp
+from core.config import settings
 from bot.handlers import router
 
-from webhook_app.utils.logger import setup_logger
+from utils.logger import setup_logger
 
 logger = setup_logger(__name__)
 

@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from bot.config import settings
+from core.config import settings
 from bot.crud.bot_token import *
 from bot.crud.stats import get_system_stats
 from bot.crud.user import get_recent_users, search_users

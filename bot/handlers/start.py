@@ -5,7 +5,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from bot.crud.user import create_or_update_user
 from bot.models import db_helper
-from bot.utils import setup_logger
+from utils.logger import setup_logger
 
 logger = setup_logger(__name__)
 router = Router()

@@ -1,8 +1,8 @@
 from aiogram.types import Update
 from fastapi import APIRouter, Request
 
-from bot.client import dp
-from webhook_app.utils.logger import setup_logger
+from core.client import dp
+from utils.logger import setup_logger
 
 logger = setup_logger(__name__)
 router = APIRouter()

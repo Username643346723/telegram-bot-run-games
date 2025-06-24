@@ -4,8 +4,8 @@ from pathlib import Path
 from aiogram import Router, F
 from aiogram.types import CallbackQuery
 
-from bot.config import settings
-from bot.utils import setup_logger
+from core.config import settings
+from utils.logger import setup_logger
 
 logger = setup_logger(__name__)
 router = Router()
