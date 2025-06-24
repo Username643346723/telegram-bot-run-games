@@ -1,6 +1,6 @@
 from aiogram import Router
 from core.config import settings
-from utils.logger import setup_logger
+from libs.logging.logger import setup_logger
 
 logger = setup_logger(__name__)
 

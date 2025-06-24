@@ -3,7 +3,7 @@ from sqlalchemy import select, update, delete, func
 from bot.models.bot_token import BotToken
 from sqlalchemy.exc import IntegrityError
 from typing import Sequence
-from bot.utils.logger import setup_logger
+from libs.logging import setup_logger
 
 logger = setup_logger(__name__)
 

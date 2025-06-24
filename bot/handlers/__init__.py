@@ -4,9 +4,9 @@ from .bot_token import router as router_token
 from .admin import router as router_admin
 from .bot_username import router as router_username
 
-router = Router()
+router_main = Router()
 
-router.include_router(router_start)
-router.include_router(router_token)
-router.include_router(router_admin)
-router.include_router(router_username)
+router_main.include_router(router_start)
+router_main.include_router(router_token)
+router_main.include_router(router_admin)
+router_main.include_router(router_username)

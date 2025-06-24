@@ -3,8 +3,8 @@ from aiogram import types
 
 from bot.crud.bot_token import *
 from bot.crud.user import get_user_by_telegram_id, create_or_update_user
-from bot.models import db_helper
-from utils.logger import setup_logger
+from core.db.session import db_helper
+from libs.logging import setup_logger
 from utils.token import validate_token
 
 logger = setup_logger(__name__)

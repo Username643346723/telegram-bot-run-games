@@ -17,6 +17,7 @@ aiosqlite = "^0.21.0"
 black = "^25.1.0"
 fastapi = "^0.115.13"
 uvicorn = "^0.34.3"
+asyncpg = "^0.30.0"
 
 [build-system]
 requires = ["poetry-core"]

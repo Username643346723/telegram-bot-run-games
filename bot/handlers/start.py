@@ -4,8 +4,8 @@ from aiogram.filters.command import CommandStart
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from bot.crud.user import create_or_update_user
-from bot.models import db_helper
-from utils.logger import setup_logger
+from core.db.session import db_helper
+from libs.logging import setup_logger
 
 logger = setup_logger(__name__)
 router = Router()

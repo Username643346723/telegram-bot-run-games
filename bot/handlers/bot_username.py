@@ -5,7 +5,7 @@ from aiogram import Router, F
 from aiogram.types import CallbackQuery
 
 from core.config import settings
-from utils.logger import setup_logger
+from libs.logging import setup_logger
 
 logger = setup_logger(__name__)
 router = Router()

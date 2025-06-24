@@ -4,7 +4,7 @@ from sqlalchemy import BigInteger, String
 from sqlalchemy import Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from .base import Base
+from core.db.models import Base
 
 if TYPE_CHECKING:
     from .bot_token import BotToken
