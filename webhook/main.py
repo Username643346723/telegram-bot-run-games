@@ -6,7 +6,7 @@ from fastapi import FastAPI
 
 from bot.handlers import router_main
 from bot.handlers.bot_game import user_bots_router
-from core.bot import main_bot, main_bot_dp, user_bots_dp
+from core.bot import main_bot, main_bot_dp, user_bots_dp, active_user_bots
 from core.config import settings
 from libs.logging.logger import setup_logger
 from webhook.api import main_router
@@ -25,11 +25,21 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         webhook_url = f"{settings.WEBHOOK_BASE_URL}/api/v1/webhook/{settings.tg.webhook_id_base_bot}"
         logger.info(f"Setting webhook: {webhook_url}")
         await main_bot.set_webhook(url=webhook_url)
-    yield
+
     # Добавьте при необходимости логику cleanup
     logger.info("Application shutdown")
 
     await token.init_user_bots()
+
+    yield
+
+    # Очистка вебхуков при завершении
+    for bot_token, bot in active_user_bots.items():
+        try:
+            await bot.delete_webhook()
+            logger.info(f"[×] Webhook удалён для бота: {bot_token}")
+        except Exception as e:
+            logger.error(f"[!] Не удалось удалить webhook для {bot_token}: {e}")
 
 
 app = FastAPI(
