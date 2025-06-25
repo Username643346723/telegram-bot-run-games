@@ -85,6 +85,7 @@ class Settings(BaseSettings):
     db: DatabaseConfig
     logging: LoggingConfig = LoggingConfig()
     tg: Telegram
+    game: Game
 
     WEBHOOK_SECRET: str
     WEBHOOK_BASE_URL: str = "http://127.0.0.1:8000"
