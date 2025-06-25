@@ -5,7 +5,7 @@ import uvicorn
 from fastapi import FastAPI
 
 from bot.handlers import router_main
-from bot.handlers.bot_game import user_bots_router
+from bot.handlers.bot_game.handlers import user_bots_router
 from core.bot import main_bot, main_bot_dp, user_bots_dp, active_user_bots
 from core.config import settings
 from libs.logging.logger import setup_logger
