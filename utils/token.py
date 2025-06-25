@@ -6,6 +6,7 @@ from aiogram.enums import ParseMode
 from bot.handlers.bot_token import logger
 from core.bot import active_user_bots
 from bot.crud.bot_token import get_tokens_to_check
+from core.config import settings
 from core.db.session import db_helper
 
 
@@ -46,9 +47,11 @@ async def init_user_bots() -> None:
         tokens = await get_tokens_to_check(session, check_type="recent", limit=10000)
         for token in tokens:
             if token.token not in active_user_bots:
-                active_user_bots[token.token] = Bot(
-                    token=token.token,
-                    default=DefaultBotProperties(parse_mode=ParseMode.HTML)
-                )
+                bot = Bot(token=token.token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+                active_user_bots[token.token] = bot
+                # Установка webhook для каждого бота
+                webhook_url = f"{settings.WEBHOOK_BASE_URL}/api/v1/other_bot/webhook/{token.webhook_id}"
+                await bot.set_webhook(url=webhook_url)
+                logger.info(f"[+] Webhook установлен для бота: {token.token}")
 
         logger.info(f"Инициализировано {len(tokens)} ботов пользователей")
