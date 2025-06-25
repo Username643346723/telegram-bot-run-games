@@ -1,9 +1,12 @@
+from typing import Sequence
+
 import aiohttp
 from aiogram import Bot
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 
 from bot.handlers.bot_token import logger
+from bot.models import BotToken
 from core.bot import active_user_bots
 from bot.crud.bot_token import get_tokens_to_check
 from core.config import settings
@@ -42,16 +45,23 @@ async def remove_user_bot(token: str):
         await bot.session.close()
 
 
-async def init_user_bots() -> None:
-    async with db_helper.session_factory() as session:
-        tokens = await get_tokens_to_check(session, check_type="recent", limit=10000)
-        for token in tokens:
-            if token.token not in active_user_bots:
-                bot = Bot(token=token.token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-                active_user_bots[token.token] = bot
-                # Установка webhook для каждого бота
-                webhook_url = f"{settings.WEBHOOK_BASE_URL}/api/v1/other_bot/webhook/{token.webhook_id}"
-                await bot.set_webhook(url=webhook_url)
-                logger.info(f"[+] Webhook установлен для бота: {token.token}")
+async def init_user_bots(tokens: Sequence[BotToken] | None = None) -> None:
+    """Инициализация пользовательских ботов и установка webhook'ов"""
+    if tokens is None:
+        async with db_helper.session_factory() as session:
+            tokens = await get_tokens_to_check(session, check_type="recent", limit=10000)
 
-        logger.info(f"Инициализировано {len(tokens)} ботов пользователей")
+    initialized = 0
+
+    for token in tokens:
+        if token.token not in active_user_bots:
+            bot = Bot(token=token.token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+            active_user_bots[token.token] = bot
+
+            webhook_url = f"{settings.WEBHOOK_BASE_URL}/api/v1/other_bot/webhook/{token.webhook_id}"
+            await bot.set_webhook(url=webhook_url)
+
+            logger.info(f"[+] Webhook установлен для бота: {token.token}")
+            initialized += 1
+
+    logger.info(f"Инициализировано {initialized} новых ботов из {len(tokens)}")
