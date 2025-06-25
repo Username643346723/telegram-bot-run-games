@@ -21,6 +21,20 @@ class Telegram(BaseModel):
     webhook_id_base_bot: str = Field(..., )
 
 
+class Game(BaseModel):
+    url_template: str = Field(
+        ...,
+        description="Шаблон URL игры с {game_id}. Пример: 'https://example.com/game/{game_id}/'",
+        examples=["https://example.com/game/{game_id}/"]
+    )
+
+    bot_ref_template: str = Field(
+        ...,
+        description="Опциональный шаблон реф-ссылки с {ref_id}. Пример: 'https://t.me/example_bot?start=ref_{ref_id}'",
+        examples=["https://t.me/example_bot?start=ref_{ref_id}"]
+    )
+
+
 class GunicornConfig(BaseModel):
     host: str = "127.0.0.1"
     port: int = 8080
