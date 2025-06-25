@@ -5,6 +5,8 @@ from aiogram.enums import ParseMode
 
 from bot.handlers.bot_token import logger
 from core.bot import active_user_bots
+from bot.crud.bot_token import get_tokens_to_check
+from core.db.session import db_helper
 
 
 async def validate_token(token: str) -> tuple[bool, dict]:
@@ -37,3 +39,16 @@ async def remove_user_bot(token: str):
     if token in active_user_bots:
         bot = active_user_bots.pop(token)
         await bot.session.close()
+
+
+async def init_user_bots() -> None:
+    async with db_helper.session_factory() as session:
+        tokens = await get_tokens_to_check(session, check_type="recent", limit=10000)
+        for token in tokens:
+            if token.token not in active_user_bots:
+                active_user_bots[token.token] = Bot(
+                    token=token.token,
+                    default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+                )
+
+        logger.info(f"Инициализировано {len(tokens)} ботов пользователей")
