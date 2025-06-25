@@ -10,6 +10,7 @@ from core.bot import main_bot, main_bot_dp, user_bots_dp
 from core.config import settings
 from libs.logging.logger import setup_logger
 from webhook.api import main_router
+from utils import token
 
 logger = setup_logger(__name__)
 
@@ -27,6 +28,8 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     yield
     # Добавьте при необходимости логику cleanup
     logger.info("Application shutdown")
+
+    await token.init_user_bots()
 
 
 app = FastAPI(
