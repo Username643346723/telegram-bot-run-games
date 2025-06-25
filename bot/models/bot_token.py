@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
-
+from uuid import uuid4
 from sqlalchemy import BigInteger, String, Boolean, Integer, DateTime, func, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -37,6 +37,16 @@ class BotToken(Base):
         unique=True,
         comment="Токен бота Telegram (частично скрывается при выводе)"
     )
+
+    webhook_id: Mapped[str] = mapped_column(
+        String(100),
+        default=lambda: uuid4().hex,
+        nullable=False,
+        unique=True,
+        index=True,
+        comment="Уникальный идентификатор необходимый для создания url webhook"
+    )
+
     is_active: Mapped[bool] = mapped_column(
         Boolean,
         default=False,
