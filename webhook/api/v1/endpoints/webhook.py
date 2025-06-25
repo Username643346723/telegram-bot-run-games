@@ -39,6 +39,10 @@ async def telegram_webhook_other_bot(
 ):
     json_data = await request.json()
 
-    await handle_telegram_update_other_bot(webhook_id, request_json_data=json_data)
+    await handle_telegram_update_other_bot(
+        webhook_id,
+        request_json_data=json_data,
+        request=request
+    )
 
     return {"ok": True}
