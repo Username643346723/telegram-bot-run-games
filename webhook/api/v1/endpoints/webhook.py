@@ -33,16 +33,14 @@ async def telegram_webhook_base_bot(
 
 
 @router.post("/other_bot/webhook/{webhook_id}")
-async def telegram_webhook_other_bot(
-        webhook_id: str,
-        request: Request,
-):
-    json_data = await request.json()
-
-    await handle_telegram_update_other_bot(
-        webhook_id,
-        request_json_data=json_data,
-        request=request
-    )
-
+async def telegram_webhook_other_bot(webhook_id: str, request: Request):
+    try:
+        json_data = await request.json()
+        await handle_telegram_update_other_bot(
+            webhook_id,
+            request_json_data=json_data,
+            request=request
+        )
+    except Exception as e:
+        logger.exception(f"Ошибка при обработке webhook от другого бота [{webhook_id}]: {e}")
     return {"ok": True}
