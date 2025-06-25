@@ -25,7 +25,7 @@ async def handle_check_tokens(callback: types.CallbackQuery):
     builder.button(text="🔍 Неактивные", callback_data="admin:check_inactive")
     builder.button(text="🔄 Все", callback_data="admin:check_all")
     builder.button(text="📋 Последние 10", callback_data="admin:check_recent")
-    builder.button(text="◀️ Назад", callback_data="admin:back")
+    builder.button(text="◀️ Назад", callback_data=AdminCallback(action=AdminAction.back).pack())
     builder.adjust(1)
 
     await callback.message.edit_text(
@@ -155,7 +155,7 @@ async def finish_token_check(callback: types.CallbackQuery, state: FSMContext):
     data = await state.get_data()
 
     builder = InlineKeyboardBuilder()
-    builder.button(text="◀️ Назад", callback_data="admin:back")
+    builder.button(text="◀️ Назад", callback_data=AdminCallback(action=AdminAction.back).pack())
 
     await callback.message.edit_text(
         f"Проверка завершена!\n\n"
@@ -176,7 +176,7 @@ async def cancel_token_check(callback: types.CallbackQuery, state: FSMContext):
         f"Проверено: {data.get('checked', 0)}/{data['total_tokens']}\n"
         f"Активных: {data.get('active_now', 0)}",
         reply_markup=InlineKeyboardBuilder()
-        .button(text="◀️ Назад", callback_data="admin:back")
+        .button(text="◀️ Назад", callback_data=AdminCallback(action=AdminAction.back).pack())
         .as_markup()
     )
     await state.clear()
