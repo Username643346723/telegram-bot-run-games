@@ -5,7 +5,7 @@ import uvicorn
 from fastapi import FastAPI
 
 from bot.handlers import router_main
-from core.bot import main_bot, user_bots_dp
+from core.bot import main_bot, main_bot_dp
 from core.config import settings
 from libs.logging.logger import setup_logger
 from webhook.api import main_router
@@ -35,7 +35,7 @@ app = FastAPI(
 )
 app.include_router(main_router, prefix="/api/v1")
 
-user_bots_dp.include_router(router_main)
+main_bot_dp.include_router(router_main)
 
 logger.info(
     f"Starting app in {settings.ENV} mode\n"

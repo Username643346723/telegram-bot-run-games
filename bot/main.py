@@ -1,5 +1,5 @@
 from aiogram import Dispatcher
-from core.bot import main_bot, user_bots_dp  # Импорт из core/bot.py
+from core.bot import main_bot, main_bot_dp  # Импорт из core/bot.py
 from core.config import settings
 from libs.logging import setup_logger
 from bot.handlers import router_main  # Локальный импорт
@@ -8,7 +8,7 @@ logger = setup_logger(__name__)
 
 
 async def main():
-    user_bots_dp.include_router(router_main)
+    main_bot_dp.include_router(router_main)
 
     logger.info(
         f"Starting bot in polling mode...\n"
@@ -18,7 +18,7 @@ async def main():
     await main_bot.delete_webhook(drop_pending_updates=True)
 
     try:
-        await user_bots_dp.start_polling(main_bot)
+        await main_bot_dp.start_polling(main_bot)
     except Exception as e:
         logger.critical(f"Bot crashed: {e}")
         raise
