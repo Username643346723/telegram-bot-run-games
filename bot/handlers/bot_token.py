@@ -5,6 +5,7 @@ from bot.crud.bot_token import *
 from bot.crud.user import get_user_by_telegram_id, create_or_update_user
 from core.db.session import db_helper
 from libs.logging import setup_logger
+from utils.token import init_user_bots
 from utils.token import validate_token
 
 logger = setup_logger(__name__)
@@ -43,14 +44,17 @@ async def process_token(message: types.Message):
             )
             logger.info(f"Created new user record for {message.from_user.id}")
 
-        await create_bot_token(
+        bot_token = await create_bot_token(
             session=session,
             token=token,
             user_id=user.id,
             bot_name=bot_info.get("first_name", ""),
             bot_username=bot_info.get("username", "")
         )
+
         logger.info(f"Token saved for bot @{bot_info.get('username')} by user {message.from_user.id}")
+
+        await init_user_bots([bot_token])  # Инициализация токена
 
     await message.answer(
         f"🎉  <b>Токен принят!</b>\n"
