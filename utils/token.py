@@ -1,6 +1,10 @@
 import aiohttp
+from aiogram import Bot
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
 
 from bot.handlers.bot_token import logger
+from core.bot import active_user_bots
 
 
 async def validate_token(token: str) -> tuple[bool, dict]:
@@ -17,3 +21,19 @@ async def validate_token(token: str) -> tuple[bool, dict]:
     except Exception as e:
         logger.warning(f"Exception during token validation: {e}")
     return False, {}
+
+
+async def get_user_bot(token: str) -> Bot:
+    if token not in active_user_bots:
+        active_user_bots[token] = Bot(
+            token=token,
+            default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+        )
+    return active_user_bots[token]
+
+
+# При удалении бота чистим кэш
+async def remove_user_bot(token: str):
+    if token in active_user_bots:
+        bot = active_user_bots.pop(token)
+        await bot.session.close()
