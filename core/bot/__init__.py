@@ -4,9 +4,11 @@ from aiogram.enums import ParseMode
 
 from core.config.app import settings
 
-bot = Bot(
+main_bot = Bot(
     token=settings.tg.token,
     default=DefaultBotProperties(parse_mode=ParseMode.HTML)
 )
 
-dp = Dispatcher()
+main_bot_dp = Dispatcher()  # Основной диспетчер, который отвечает работу основного бота
+
+user_bots_dp = Dispatcher()  # Диспетчер отвечающий за ботов добавленных пользователями
