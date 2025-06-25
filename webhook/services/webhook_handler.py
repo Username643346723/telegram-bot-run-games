@@ -36,7 +36,7 @@ async def handle_telegram_update_other_bot(
             )
             return
 
-    _bot = token.get_user_bot(bot_token.token)
+    _bot = await token.get_user_bot(bot_token.token)
     try:
         await user_bots_dp.feed_webhook_update(_bot, request_json_data)
     except TelegramNetworkError as e:
