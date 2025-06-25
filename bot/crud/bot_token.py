@@ -60,6 +60,13 @@ async def get_token_by_id(session: AsyncSession, token_id: int) -> BotToken | No
     return result.scalar_one_or_none()
 
 
+# Получение токена по webhook ID
+async def get_token_by_webhook_id(session: AsyncSession, webhook_id: str) -> BotToken | None:
+    stmt = select(BotToken).where(BotToken.webhook_id == webhook_id)
+    result = await session.execute(stmt)
+    return result.scalar_one_or_none()
+
+
 # Получение всех токенов пользователя
 async def list_tokens_by_user(session: AsyncSession, user_id: int) -> Sequence[BotToken]:
     stmt = select(BotToken).where(BotToken.user_id == user_id)
