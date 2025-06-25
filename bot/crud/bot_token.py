@@ -10,7 +10,8 @@ logger = setup_logger(__name__)
 
 async def get_tokens_to_check(
         session: AsyncSession,
-        check_type: str
+        check_type: str,
+        limit: int = 10
 ) -> Sequence[BotToken]:
     """Получить токены для проверки по типу"""
     stmt = select(BotToken)
@@ -18,7 +19,7 @@ async def get_tokens_to_check(
     if check_type == "inactive":
         stmt = stmt.where(BotToken.is_active == False)
     elif check_type == "recent":
-        stmt = stmt.order_by(BotToken.created_at.desc()).limit(10)
+        stmt = stmt.order_by(BotToken.created_at.desc()).limit(limit)
 
     result = await session.execute(stmt)
     return result.scalars().all()
